@@ -30,7 +30,7 @@ void	appendPhilo(t_philo **philo, t_philo *new)
 	new->prev = current;
 }
 
-t_philo	*newPhilo(int philoId, int fork)
+t_philo	*newPhilo(int philoId)
 {
 	t_philo	*new_node;
 
@@ -38,9 +38,8 @@ t_philo	*newPhilo(int philoId, int fork)
 	if (!new_node)
 		return (NULL);
 	new_node->philoId = philoId;
-	new_node->fork = fork;
-	new_node->next = (NULL);
-	new_node->prev = (NULL);
+	new_node->next = NULL;
+	new_node->prev = NULL;
 	return (new_node);
 }
 
@@ -59,4 +58,16 @@ int	list_size(t_philo *lst)
 		temp = temp->next;
 	}
 	return (i);
+}
+
+void	simulation_error(int error)
+{
+	if (1 == error)
+	{
+		printf(BOLD_RED "Wrong input! Try the following example:\n" RESET);
+		printf("./philo 5 200 500 300 [5]");
+	}
+	else if (2 == error)
+		printf("ERROR");
+	exit(1);
 }
