@@ -1,6 +1,7 @@
 #include "philo.h"
 
-pthread_mutex_t	mutex;
+pthread_mutex_t mutex;
+
 void	*do_smt(void *philos)
 {
 	t_philo *philo;
@@ -42,9 +43,8 @@ void	create_philos(t_philo *philo)
 	}
 }
 
-t_philo	*create_list(int ac, char **av)
+t_philo	*create_list(char **av)
 {
-	(void)ac;
 	t_philo	*philo_list;
 	int		philos;
 	int 	i;
@@ -54,7 +54,7 @@ t_philo	*create_list(int ac, char **av)
 	philo_list = NULL;
 	while (philos--)
 	{
-		appendPhilo(&philo_list, newPhilo(i, i));
+		appendPhilo(&philo_list, newPhilo(i));
 		i++;
 	}
 	create_philos(philo_list);
@@ -75,14 +75,13 @@ void	init_threads(t_philo *philos)
 
 int main(int ac, char **av)
 {
-	t_philo				*philos;
+	t_table	table;
 
 	pthread_mutex_init(&mutex, NULL);
-	if (ac != 2)
-		return (1);
-	philos = NULL;
-	pthread_mutex_init(&mutex, NULL);
-	philos = create_list(ac, av);
-	init_threads(philos);
+	if (ac != 5 && ac != 6)
+		simulation_error(1);
+	parse_input(&table, av);
+	table.philosophers = create_list(av);
+	init_threads(table.philosophers);
 	return (0);
 }
