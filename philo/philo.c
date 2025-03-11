@@ -1,87 +1,91 @@
 #include "philo.h"
 
-pthread_mutex_t mutex;
-
-void	*do_smt(void *philos)
+void	*do_smt(void *smt)
 {
-	t_philo *philo;
-
-	philo = (t_philo *)philos;
-	printf("%d is sleeping\n", philo->philoId);
-	pthread_mutex_lock(&mutex);
-	sleep(1);
-	pthread_mutex_unlock(&mutex);
-	printf("%d is dead\n", philo->philoId);
+	smt = smt;
+	printf("oi\n");
 	return (NULL);
 }
 
-void	destroy_list(t_philo **philos)
+void	thread_create(pthread_t *thread, void *(func)(void *), void *data)
 {
-	t_philo	*aux;
-
-	if (!*philos)
-		return ;
-	while ((*philos)->philoId <= 1)
-	{
-		aux = (*philos)->prev;
-		free(philos);
-		*philos = aux;
-	}
-	*philos = NULL;
+	if (pthread_create(thread, NULL, func, data) != 0)
+		simulation_error(1);
 }
 
-void	create_philos(t_philo *philo)
+void	simulation_start(t_table *table)
 {
 	int	i;
 
-	i = 0;
-	while (i < list_size(philo))
+	i = -1;
+	if (table->meals_limit == 0)
+		return ;
+	else if (table->philo_nbr == 1)
+		;// oi
+	else
 	{
-		if (pthread_create(&philo->philo, NULL, &do_smt, philo) != 0)
-			destroy_list(&philo);
-		philo = philo->next;
+		while (++i < table->philo_nbr)
+			thread_create(&table->philos[i].thread_id, &do_smt, &table->philos[i]);
 	}
 }
 
-t_philo	*create_list(char **av)
+void	assign_forks(t_philo *philo, t_fork *forks, int i)
 {
-	t_philo	*philo_list;
-	int		philos;
-	int 	i;
+	int	philo_nbr;
 
-	philos = atoi(av[1]);
-	i = 1;
-	philo_list = NULL;
-	while (philos--)
+	philo_nbr = philo->table->philo_nbr;
+	if (philo->id % 2 == 0)
 	{
-		appendPhilo(&philo_list, newPhilo(i));
-		i++;
+		philo->first_fork = &forks[i];
+		philo->second_fork = &forks[(i + 1) % philo_nbr];
 	}
-	create_philos(philo_list);
-	return (philo_list);
+	else
+	{
+		philo->second_fork = &forks[i];
+		philo->first_fork = &forks[(i + 1) % philo_nbr];
+	}
 }
 
-void	init_threads(t_philo *philos)
+void	philo_init(t_table *table)
 {
-	int i;
+	t_philo	*philo;
+	int	i;
 
-	i = list_size(philos);
-	while (i--)
+	i = -1;
+	philo = table->philos;
+	while (++i < table->philo_nbr)
 	{
-		pthread_join(philos->philo, NULL);
-		philos = philos->next;
+		table->philos[i].id = i + 1;
+		table->philos[i].meals_counter = 0;
+		table->philos[i].table = table;
+		assign_forks(&philo[i], table->forks, i);
 	}
+}
+
+void	data_init(t_table *table)
+{
+	int	i;
+
+	i = -1;
+	table->end_simulation = false;
+	table->philos = safe_malloc(table->philo_nbr * sizeof(t_philo));
+	table->forks = safe_malloc(table->philo_nbr * sizeof(t_fork));
+	while (++i < table->philo_nbr)
+	{
+		pthread_mutex_init(&table->forks[i].fork, NULL);
+		table->forks[i].fork_id = i;
+	}
+	philo_init(table);
 }
 
 int main(int ac, char **av)
 {
 	t_table	table;
 
-	pthread_mutex_init(&mutex, NULL);
 	if (ac != 5 && ac != 6)
 		simulation_error(1);
 	parse_input(&table, av);
-	table.philosophers = create_list(av);
-	init_threads(table.philosophers);
+	data_init(&table);
+	simulation_start(&table);
 	return (0);
 }

@@ -45,5 +45,4 @@ void	parse_input(t_table *table, char **av)
 		table->meals_limit = atoi2(av[5]);
 	else
 		table->meals_limit = -1;
-	printf("\n%li\n", table->meals_limit);
 }

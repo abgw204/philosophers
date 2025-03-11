@@ -16,21 +16,27 @@
 # define BOLD_CYAN    "\033[1;36m"
 # define BOLD_WHITE   "\033[1;37m"
 
+typedef struct	s_table t_table;
+
 typedef struct s_forks
 {
 	pthread_mutex_t	fork;
 	int		fork_id;
 }	t_fork;
 
-typedef struct philoAndForks
+typedef struct s_philo
 {
-    	pthread_t   	philo;
-	int	        philoId;
-	struct      philoAndForks	*next;
-	struct      philoAndForks	*prev;
+	int	        id;
+	long		meals_counter;
+	bool		full;
+	long		last_meal_time;
+	t_fork		*first_fork;
+	t_fork		*second_fork;
+    	pthread_t   	thread_id;
+	t_table		*table;
 }	t_philo;
 
-typedef struct	s_table
+struct	s_table
 {
 	long	philo_nbr;
 	long	time_to_die;
@@ -39,14 +45,12 @@ typedef struct	s_table
 	long	meals_limit;
 	long	start_simulation;
 	bool	end_simulation;
-	t_philo	*philosophers;
+	t_philo	*philos;
 	t_fork	*forks;
-}	t_table;
+};
 
 void	parse_input(t_table *table, char **av);
-void    appendPhilo(t_philo **lst, t_philo *new);
-t_philo *newPhilo(int philoId);
-int      list_size(t_philo *lst);
 void	simulation_error(int error);
+void	*safe_malloc(size_t bytes);
 
 #endif
