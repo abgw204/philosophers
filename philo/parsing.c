@@ -21,7 +21,7 @@ static int	atoi2(const char *str)
 		if (*str == '-')
 			sign = -1;
 		else if (*str != '+')
-			simulation_error(1);
+			simulation_error("Invalid string!\n");
 		str++;
 	}
 	while (*str)
@@ -31,7 +31,7 @@ static int	atoi2(const char *str)
 		res = res * 10 + (*str++ - 48);
     	}
     	if ((res * sign) > 2147483647 || (res * sign) < 0)
-		simulation_error(1);
+		simulation_error("Negative or greater than int max!");
 	return (res * sign);
 }
 

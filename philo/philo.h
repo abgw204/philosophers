@@ -19,6 +19,15 @@
 
 typedef struct	s_table t_table;
 
+typedef enum	philo_status
+{
+	EATING,
+	THINKING,
+	SLEEPING,
+	TAKE_FIRST_FORK,
+	TAKE_SECOND_FORK,
+}	philo_sts;
+
 typedef struct s_forks
 {
 	pthread_mutex_t	fork;
@@ -34,6 +43,7 @@ typedef struct s_philo
 	t_fork		*first_fork;
 	t_fork		*second_fork;
     	pthread_t   	thread_id;
+	pthread_mutex_t	philo_mutex;
 	t_table		*table;
 }	t_philo;
 
@@ -48,12 +58,13 @@ struct	s_table
 	bool	end_simulation;
 	bool	all_threads_ready;
 	pthread_mutex_t	table_mutex;
+	pthread_mutex_t	write_mutex;
 	t_philo	*philos;
 	t_fork	*forks;
 };
 
 void	parse_input(t_table *table, char **av);
-void	simulation_error(int error);
+void	simulation_error(char *error_message);
 void	*safe_malloc(size_t bytes);
 void	set_bool(pthread_mutex_t *mutex, bool *variable, bool value);
 bool	get_bool(pthread_mutex_t *mutex, bool *variable);
@@ -61,4 +72,5 @@ void	set_long(pthread_mutex_t *mutex, long *variable, long value);
 bool	get_long(pthread_mutex_t *mutex, long *variable);
 bool	simulation_finished(t_table *table);
 void	wait_all_threads(t_table *table);
+
 #endif

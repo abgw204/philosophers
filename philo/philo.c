@@ -1,5 +1,38 @@
 #include "philo.h"
 
+long	gettime()
+{
+	struct timeval	tv;
+	if (gettimeofday(&tv, NULL))
+		simulation_error("Function gettimeofday failed");
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	write_status(char *status, t_philo *philo)
+{
+	long	elapsed;
+
+	elapsed = gettime() - philo->table->start_simulation;
+
+	if (philo->full)
+		return ;
+	if ()
+}
+
+void	eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->first_fork->fork);
+	pthread_mutex_lock(&philo->second_fork->fork);
+
+	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime());
+	usleep(philo->table->time_to_eat / 1e3);
+	if (philo->table->meals_limit > 0
+		&& philo->meals_counter == philo->table->meals_limit)
+		set_bool(&philo->philo_mutex, &philo->full, true);
+	pthread_mutex_unlock(&philo->first_fork->fork);
+	pthread_mutex_unlock(&philo->second_fork->fork);
+}
+
 void	*dinner(void *data)
 {
 	t_philo	*philo;
@@ -8,7 +41,11 @@ void	*dinner(void *data)
 	wait_all_threads(philo->table);
 	while (!simulation_finished(philo->table))
 	{
-
+		if (get_bool(&philo->table->table_mutex, &philo->full))
+			break ;
+		eat(philo);
+		// sleep
+		// think
 	}
 	return (NULL);
 }
@@ -16,7 +53,7 @@ void	*dinner(void *data)
 void	thread_create(pthread_t *thread, void *(func)(void *), void *data)
 {
 	if (pthread_create(thread, NULL, func, data) != 0)
-		simulation_error(1);
+		simulation_error("A Thread failed to be created!\n");
 }
 
 void	simulation_start(t_table *table)
@@ -30,7 +67,9 @@ void	simulation_start(t_table *table)
 		; // TODO
 	else
 		while (++i < table->philo_nbr)
-			thread_create(&table->philos[i].thread_id, &dinner, &table->philos[i]);
+			thread_create(&table->philos[i].thread_id, &dinner,
+					&table->philos[i]);
+	table->start_simulation = gettime();
 	set_bool(&table->table_mutex, &table->all_threads_ready, true);
 	i = -1;
 	while (++i < table->philo_nbr)
@@ -67,6 +106,7 @@ void	philo_init(t_table *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].meals_counter = 0;
 		table->philos[i].table = table;
+		pthread_mutex_init(&table->philos[i].philo_mutex, NULL);
 		assign_forks(&philo[i], table->forks, i);
 	}
 }
@@ -81,6 +121,7 @@ void	data_init(t_table *table)
 	pthread_mutex_init(&table->table_mutex, NULL);
 	table->philos = safe_malloc(table->philo_nbr * sizeof(t_philo));
 	table->forks = safe_malloc(table->philo_nbr * sizeof(t_fork));
+	pthread_mutex_init(&table->write_mutex, NULL);
 	while (++i < table->philo_nbr)
 	{
 		pthread_mutex_init(&table->forks[i].fork, NULL);
@@ -93,7 +134,7 @@ int main(int ac, char **av)
 {
 	t_table	table;
 	if (ac != 5 && ac != 6)
-		simulation_error(1);
+		simulation_error("Wrong input! Try:\n./philo 5 400 150 150");
 	parse_input(&table, av);
 	data_init(&table);
 	simulation_start(&table);

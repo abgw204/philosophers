@@ -12,15 +12,9 @@
 
 #include "philo.h"
 
-void	simulation_error(int error)
+void	simulation_error(char *error_message)
 {
-	if (1 == error)
-	{
-		printf(BOLD_RED "Wrong input! Try the following example:\n" RESET);
-		printf("./philo 5 200 500 300 [5]");
-	}
-	else if (2 == error)
-		printf("ERROR");
+	printf("%s", error_message);
 	exit(1);
 }
 
@@ -30,7 +24,7 @@ void	*safe_malloc(size_t bytes)
 
 	ptr = malloc(bytes);
 	if (!ptr)
-		simulation_error(2);
+		simulation_error("Malloc error!(something is very wrong)\n");
 	return (ptr);
 }
 
