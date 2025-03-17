@@ -33,3 +33,9 @@ void	*safe_malloc(size_t bytes)
 		simulation_error(2);
 	return (ptr);
 }
+
+void	wait_all_threads(t_table *table)
+{
+	while (!get_bool(&table->table_mutex, &table->all_threads_ready))
+		;
+}

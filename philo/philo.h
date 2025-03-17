@@ -6,6 +6,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>
+# include <sys/time.h>
 
 # define RESET        "\033[0m"
 # define BOLD_RED     "\033[1;31m"
@@ -45,6 +46,8 @@ struct	s_table
 	long	meals_limit;
 	long	start_simulation;
 	bool	end_simulation;
+	bool	all_threads_ready;
+	pthread_mutex_t	table_mutex;
 	t_philo	*philos;
 	t_fork	*forks;
 };
@@ -52,5 +55,10 @@ struct	s_table
 void	parse_input(t_table *table, char **av);
 void	simulation_error(int error);
 void	*safe_malloc(size_t bytes);
-
+void	set_bool(pthread_mutex_t *mutex, bool *variable, bool value);
+bool	get_bool(pthread_mutex_t *mutex, bool *variable);
+void	set_long(pthread_mutex_t *mutex, long *variable, long value);
+bool	get_long(pthread_mutex_t *mutex, long *variable);
+bool	simulation_finished(t_table *table);
+void	wait_all_threads(t_table *table);
 #endif

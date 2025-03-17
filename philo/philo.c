@@ -1,9 +1,15 @@
 #include "philo.h"
 
-void	*do_smt(void *smt)
+void	*dinner(void *data)
 {
-	smt = smt;
-	printf("oi\n");
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	wait_all_threads(philo->table);
+	while (!simulation_finished(philo->table))
+	{
+
+	}
 	return (NULL);
 }
 
@@ -21,19 +27,22 @@ void	simulation_start(t_table *table)
 	if (table->meals_limit == 0)
 		return ;
 	else if (table->philo_nbr == 1)
-		;// oi
+		; // TODO
 	else
-	{
 		while (++i < table->philo_nbr)
-			thread_create(&table->philos[i].thread_id, &do_smt, &table->philos[i]);
-	}
+			thread_create(&table->philos[i].thread_id, &dinner, &table->philos[i]);
+	set_bool(&table->table_mutex, &table->all_threads_ready, true);
+	i = -1;
+	while (++i < table->philo_nbr)
+		pthread_join(table->philos[i].thread_id, NULL);
+	// end stuff TODO
 }
 
 void	assign_forks(t_philo *philo, t_fork *forks, int i)
 {
 	int	philo_nbr;
 
-	philo_nbr = philo->table->philo_nbr;
+	philo_nbr = (int)philo->table->philo_nbr;
 	if (philo->id % 2 == 0)
 	{
 		philo->first_fork = &forks[i];
@@ -68,6 +77,8 @@ void	data_init(t_table *table)
 
 	i = -1;
 	table->end_simulation = false;
+	table->all_threads_ready = false;
+	pthread_mutex_init(&table->table_mutex, NULL);
 	table->philos = safe_malloc(table->philo_nbr * sizeof(t_philo));
 	table->forks = safe_malloc(table->philo_nbr * sizeof(t_fork));
 	while (++i < table->philo_nbr)
@@ -81,7 +92,6 @@ void	data_init(t_table *table)
 int main(int ac, char **av)
 {
 	t_table	table;
-
 	if (ac != 5 && ac != 6)
 		simulation_error(1);
 	parse_input(&table, av);
