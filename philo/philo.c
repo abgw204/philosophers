@@ -8,7 +8,7 @@ long	gettime()
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	write_status(char *status, t_philo *philo)
+void	write_status(philo_sts status, t_philo *philo)
 {
 	long	elapsed;
 
@@ -16,19 +16,35 @@ void	write_status(char *status, t_philo *philo)
 
 	if (philo->full)
 		return ;
-	if ()
+	pthread_mutex_lock(&philo->table->write_mutex);
+	printf("%ld %2d ", elapsed, philo->id);
+	if (status == EATING)
+		printf("is eating\n");
+	else if (status == TAKE_FIRST_FORK
+			|| status == TAKE_SECOND_FORK)
+		printf("has taken a fork\n");
+	pthread_mutex_unlock(&philo->table->write_mutex);
+}
+
+void	sleeping(t_philo *philo)
+{
+	usleep(philo->table->time_to_sleep);
 }
 
 void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->first_fork->fork);
+	write_status(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->second_fork->fork);
+	write_status(TAKE_SECOND_FORK, philo);
 
 	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime());
-	usleep(philo->table->time_to_eat / 1e3);
+	//usleep(philo->table->time_to_eat / 1e3);
 	if (philo->table->meals_limit > 0
 		&& philo->meals_counter == philo->table->meals_limit)
 		set_bool(&philo->philo_mutex, &philo->full, true);
+	write_status(EATING, philo);
+	philo->meals_counter++;
 	pthread_mutex_unlock(&philo->first_fork->fork);
 	pthread_mutex_unlock(&philo->second_fork->fork);
 }
@@ -44,7 +60,7 @@ void	*dinner(void *data)
 		if (get_bool(&philo->table->table_mutex, &philo->full))
 			break ;
 		eat(philo);
-		// sleep
+		sleeping(philo);
 		// think
 	}
 	return (NULL);
@@ -133,6 +149,7 @@ void	data_init(t_table *table)
 int main(int ac, char **av)
 {
 	t_table	table;
+
 	if (ac != 5 && ac != 6)
 		simulation_error("Wrong input! Try:\n./philo 5 400 150 150");
 	parse_input(&table, av);
