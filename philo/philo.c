@@ -3,9 +3,19 @@
 long	gettime()
 {
 	struct timeval	tv;
+
 	if (gettimeofday(&tv, NULL))
 		simulation_error("Function gettimeofday failed");
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	isleep(long time)
+{
+	long	start;
+
+	time = time / 1e3;
+	start = gettime() + time;
+	while (gettime() < start);
 }
 
 void	write_status(philo_sts status, t_philo *philo)
@@ -17,7 +27,7 @@ void	write_status(philo_sts status, t_philo *philo)
 	if (philo->full)
 		return ;
 	pthread_mutex_lock(&philo->table->write_mutex);
-	printf("%ld %2d ", elapsed, philo->id);
+	printf("%-6ld %d ", elapsed, philo->id);
 	if (status == EATING)
 		printf("is eating\n");
 	else if (status == TAKE_FIRST_FORK
@@ -37,13 +47,12 @@ void	eat(t_philo *philo)
 	write_status(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->second_fork->fork);
 	write_status(TAKE_SECOND_FORK, philo);
-
 	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime());
-	//usleep(philo->table->time_to_eat / 1e3);
 	if (philo->table->meals_limit > 0
 		&& philo->meals_counter == philo->table->meals_limit)
 		set_bool(&philo->philo_mutex, &philo->full, true);
 	write_status(EATING, philo);
+	isleep(philo->table->time_to_eat);
 	philo->meals_counter++;
 	pthread_mutex_unlock(&philo->first_fork->fork);
 	pthread_mutex_unlock(&philo->second_fork->fork);
@@ -60,7 +69,7 @@ void	*dinner(void *data)
 		if (get_bool(&philo->table->table_mutex, &philo->full))
 			break ;
 		eat(philo);
-		sleeping(philo);
+		//sleeping(philo);
 		// think
 	}
 	return (NULL);
