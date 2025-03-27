@@ -9,6 +9,33 @@ long	gettime()
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+void	clean_philo(t_table **table)
+{
+	int	i;
+
+	i = -1;
+	while (++i < (*table)->philo_nbr)
+	{
+		pthread_mutex_destroy(&(*table)->philos[i].philo_mutex);
+	}
+	free((*table)->philos);
+	free((*table)->forks);
+}
+
+void	clean(t_table **table)
+{
+	int	i;
+
+	i = -1;
+	while (++i < (*table)->philo_nbr)
+	{
+		pthread_mutex_destroy(&(*table)->forks[i].fork);
+	}
+	pthread_mutex_destroy(&(*table)->write_mutex);
+	pthread_mutex_destroy(&(*table)->table_mutex);
+	clean_philo(table);
+}
+
 void	isleep(long time)
 {
 	long	start;
@@ -54,10 +81,10 @@ void	sleeping(t_philo *philo)
 void	*monitor_function(void *data)
 {
 	t_table *table;
+	//int	i;
 
 	table = (t_table *)data;
-	printf("chegou\n\n");
-	wait_all_threads(table);
+	//if ((*table)->philos[i].last_meal_time)
 	return (NULL);
 }
 
@@ -121,7 +148,7 @@ void	simulation_start(t_table *table)
 	pthread_join(table->monitor_thread, NULL);
 	while (++i < table->philo_nbr)
 		pthread_join(table->philos[i].thread_id, NULL);
-	// end stuff TODO
+	clean(&table);
 }
 
 void	assign_forks(t_philo *philo, t_fork *forks, int i)

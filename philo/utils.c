@@ -31,5 +31,5 @@ void	*safe_malloc(size_t bytes)
 void	wait_all_threads(t_table *table)
 {
 	while (!get_bool(&table->table_mutex, &table->all_threads_ready))
-		;
+		usleep(1);
 }
