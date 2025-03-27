@@ -24,7 +24,7 @@ void	write_status(philo_sts status, t_philo *philo)
 
 	elapsed = gettime() - philo->table->start_simulation;
 
-	if (philo->full)
+	if (get_bool(&philo->table->table_mutex, &philo->full))
 		return ;
 	pthread_mutex_lock(&philo->table->write_mutex);
 	printf("%-6ld %d ", elapsed, philo->id);
@@ -33,24 +33,44 @@ void	write_status(philo_sts status, t_philo *philo)
 	else if (status == TAKE_FIRST_FORK
 			|| status == TAKE_SECOND_FORK)
 		printf("has taken a fork\n");
+	else if (status == SLEEPING)
+		printf("is sleeping\n");
+	else if(status == THINKING)
+		printf("is thinking\n");
 	pthread_mutex_unlock(&philo->table->write_mutex);
+}
+
+void	thinking(t_philo *philo)
+{
+	write_status(THINKING, philo);
 }
 
 void	sleeping(t_philo *philo)
 {
-	usleep(philo->table->time_to_sleep);
+	write_status(SLEEPING, philo);
+	isleep(philo->table->time_to_sleep);
+}
+
+void	*monitor_function(void *data)
+{
+	t_table *table;
+
+	table = (t_table *)data;
+	printf("chegou\n\n");
+	wait_all_threads(table);
+	return (NULL);
 }
 
 void	eat(t_philo *philo)
 {
+	if (philo->table->meals_limit > 0
+		&& philo->meals_counter == philo->table->meals_limit)
+		set_bool(&philo->philo_mutex, &philo->full, true);
 	pthread_mutex_lock(&philo->first_fork->fork);
 	write_status(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->second_fork->fork);
 	write_status(TAKE_SECOND_FORK, philo);
 	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime());
-	if (philo->table->meals_limit > 0
-		&& philo->meals_counter == philo->table->meals_limit)
-		set_bool(&philo->philo_mutex, &philo->full, true);
 	write_status(EATING, philo);
 	isleep(philo->table->time_to_eat);
 	philo->meals_counter++;
@@ -69,8 +89,8 @@ void	*dinner(void *data)
 		if (get_bool(&philo->table->table_mutex, &philo->full))
 			break ;
 		eat(philo);
-		//sleeping(philo);
-		// think
+		sleeping(philo);
+		thinking(philo);
 	}
 	return (NULL);
 }
@@ -97,6 +117,8 @@ void	simulation_start(t_table *table)
 	table->start_simulation = gettime();
 	set_bool(&table->table_mutex, &table->all_threads_ready, true);
 	i = -1;
+	thread_create(&table->monitor_thread, &monitor_function, &table);
+	pthread_join(table->monitor_thread, NULL);
 	while (++i < table->philo_nbr)
 		pthread_join(table->philos[i].thread_id, NULL);
 	// end stuff TODO
@@ -114,8 +136,8 @@ void	assign_forks(t_philo *philo, t_fork *forks, int i)
 	}
 	else
 	{
-		philo->second_fork = &forks[i];
 		philo->first_fork = &forks[(i + 1) % philo_nbr];
+		philo->second_fork = &forks[i];
 	}
 }
 
@@ -130,6 +152,7 @@ void	philo_init(t_table *table)
 	{
 		table->philos[i].id = i + 1;
 		table->philos[i].meals_counter = 0;
+		table->philos[i].full = false;
 		table->philos[i].table = table;
 		pthread_mutex_init(&table->philos[i].philo_mutex, NULL);
 		assign_forks(&philo[i], table->forks, i);

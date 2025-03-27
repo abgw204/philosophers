@@ -57,6 +57,7 @@ struct	s_table
 	long	start_simulation;
 	bool	end_simulation;
 	bool	all_threads_ready;
+	pthread_t 	monitor_thread;
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write_mutex;
 	t_philo	*philos;
