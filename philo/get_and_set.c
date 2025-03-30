@@ -24,7 +24,7 @@ void	set_long(pthread_mutex_t *mutex, long *variable, long value)
 	pthread_mutex_unlock(mutex);
 }
 
-bool	get_long(pthread_mutex_t *mutex, long *variable)
+long	get_long(pthread_mutex_t *mutex, long *variable)
 {
 	long	ret;
 

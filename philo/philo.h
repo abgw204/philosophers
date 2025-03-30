@@ -26,6 +26,7 @@ typedef enum	philo_status
 	SLEEPING,
 	TAKE_FIRST_FORK,
 	TAKE_SECOND_FORK,
+	DIED
 }	philo_sts;
 
 typedef struct s_forks
@@ -55,6 +56,7 @@ struct	s_table
 	long	time_to_sleep;
 	long	meals_limit;
 	long	start_simulation;
+	long	threads_running;
 	bool	end_simulation;
 	bool	all_threads_ready;
 	pthread_t 	monitor_thread;
@@ -70,8 +72,10 @@ void	*safe_malloc(size_t bytes);
 void	set_bool(pthread_mutex_t *mutex, bool *variable, bool value);
 bool	get_bool(pthread_mutex_t *mutex, bool *variable);
 void	set_long(pthread_mutex_t *mutex, long *variable, long value);
-bool	get_long(pthread_mutex_t *mutex, long *variable);
+long	get_long(pthread_mutex_t *mutex, long *variable);
 bool	simulation_finished(t_table *table);
 void	wait_all_threads(t_table *table);
+bool	all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr);
+void	increment_long(pthread_mutex_t *mutex, long *value);
 
 #endif

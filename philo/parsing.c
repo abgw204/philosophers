@@ -1,16 +1,14 @@
 #include "philo.h"
 
-static int	ft_isdigit(int c)
+static int ft_isdigit(int c)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	return (c >= '0' && c <= '9');
 }
 
-static int	atoi2(const char *str)
+static int atoi2(const char *str)
 {
-	long	res;
-	int	sign;
+	long res;
+	int sign;
 
 	res = 0;
 	sign = 1;
@@ -25,20 +23,20 @@ static int	atoi2(const char *str)
 		str++;
 	}
 	while (*str)
-    	{
-        	if (!ft_isdigit(*str))
-            		break ;
+	{
+		if (!ft_isdigit(*str))
+			break;
 		res = res * 10 + (*str++ - 48);
-    	}
-    	if ((res * sign) > 2147483647 || (res * sign) < 0)
+	}
+	if ((res * sign) > 2147483647 || (res * sign) < 0)
 		simulation_error("Negative or greater than int max!");
 	return (res * sign);
 }
 
-void	parse_input(t_table *table, char **av)
+void parse_input(t_table *table, char **av)
 {
 	table->philo_nbr = atoi2(av[1]);
-	table->time_to_die = atoi2(av[2]) * 1e3;
+	table->time_to_die = atoi2(av[2]);
 	table->time_to_eat = atoi2(av[3]) * 1e3;
 	table->time_to_sleep = atoi2(av[4]) * 1e3;
 	if (av[5])
