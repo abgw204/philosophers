@@ -58,7 +58,7 @@ void	write_status(philo_sts status, t_philo *philo)
 	long	elapsed;
 
 	elapsed = gettime() - philo->table->start_simulation;
-
+	// remove this
 	if (get_bool(&philo->table->table_mutex, &philo->full))
 		return ;
 	pthread_mutex_lock(&philo->table->write_mutex);
