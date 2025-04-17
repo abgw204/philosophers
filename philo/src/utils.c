@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-void	simulation_error(char *error_message)
+void	simulation_error(const char *error_message)
 {
 	printf("%s", error_message);
 	exit(1);
