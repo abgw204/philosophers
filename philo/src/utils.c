@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gada-sil <gada-sil@student.42.rio>         +#+  +:+       +#+        */
+/*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 15:43:49 by gada-sil          #+#    #+#             */
-/*   Updated: 2024/10/06 15:43:50 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:37:18 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void	wait_all_threads(t_table *table)
 		usleep(1);
 }
 
-bool	all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr)
+bool	all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_n)
 {
 	bool	ret;
 
 	ret = false;
 	pthread_mutex_lock(mutex);
-	if (*threads == philo_nbr)
+	if (*threads == philo_n)
 		ret = true;
 	pthread_mutex_unlock(mutex);
 	return (ret);

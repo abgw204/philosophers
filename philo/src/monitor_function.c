@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_function.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gada-sil <gada-sil@student.42.rio>         +#+  +:+       +#+        */
+/*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:00:50 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/04/09 18:00:50 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/04/18 05:45:01 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	*monitor_function(void *data)
 		}
 		if (everyone_is_full(table))
 			return (NULL);
+		usleep(1);
 	}
 	return (NULL);
 }

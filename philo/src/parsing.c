@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gada-sil <gada-sil@student.42.rio>         +#+  +:+       +#+        */
+/*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:00:40 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/04/09 18:00:44 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:46:40 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-static int ft_isdigit(int c)
+static int	ft_isdigit(int c)
 {
 	return (c >= '0' && c <= '9');
 }
 
-static int atoi2(const char *str)
+static int	atoi2(const char *str)
 {
-	long res;
-	int sign;
+	long	res;
+	int		sign;
 
 	res = 0;
 	sign = 1;
@@ -45,7 +45,7 @@ static int atoi2(const char *str)
 	return (res * sign);
 }
 
-void parse_input(t_table *table, char **av)
+void	parse_input(t_table *table, char **av)
 {
 	table->philo_nbr = atoi2(av[1]);
 	table->time_to_die = atoi2(av[2]);

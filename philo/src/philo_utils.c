@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gada-sil <gada-sil@student.42.rio>         +#+  +:+       +#+        */
+/*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:00:28 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/04/09 18:00:29 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:45:35 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	philo_init(t_table *table)
 {
 	t_philo	*philo;
-	int	i;
+	int		i;
 
 	i = -1;
 	philo = table->philos;
@@ -73,15 +73,14 @@ bool	everyone_is_full(t_table *table)
 			j++;
 	}
 	return (j == table->philo_nbr);
-
 }
 
 void	philo_dead(t_philo *philo)
 {
-	long long elapsed;
+	long long	elapsed;
 
 	elapsed = gettime() - philo->table->start_simulation;
-	set_bool(&philo->table->table_mutex, &philo->table->end_simulation, true);	
+	set_bool(&philo->table->table_mutex, &philo->table->end_simulation, true);
 	printf("%-6lld %d ", elapsed, philo->id);
 	printf("is dead\n");
 }
