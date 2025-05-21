@@ -80,6 +80,7 @@ void	philo_dead(t_philo *philo)
 	long long	elapsed;
 
 	elapsed = gettime() - philo->table->start_simulation;
+
 	set_bool(&philo->table->table_mutex, &philo->table->end_simulation, true);
 	printf("%-6lld %d ", elapsed, philo->id);
 	printf("is dead\n");

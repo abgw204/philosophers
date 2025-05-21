@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "./philo.h"
 
 static void	lonely_simulation(t_table *table)
 {
@@ -38,6 +38,7 @@ static void	*dinner(void *data)
 		thinking(philo);
 		if (get_bool(&philo->table->table_mutex, &philo->full))
 			break ;
+    usleep(1);
 	}
 	return (NULL);
 }
@@ -66,6 +67,7 @@ static void	simulation_start(t_table *table)
 	pthread_join(table->monitor_thread, NULL);
 	while (++i < table->philo_nbr && !simulation_finished(table))
 		pthread_join(table->philos[i].thread_id, NULL);
+  monitor_function((void *)table);
 	set_bool(&table->table_mutex, &table->end_simulation, true);
 	clean(&table);
 }
