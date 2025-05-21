@@ -6,7 +6,7 @@
 /*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:00:16 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/05/13 14:39:34 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:34:33 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	write_status(t_philo_sts status, t_philo *philo)
 
 	elapsed = gettime() - philo->table->start_simulation;
 	pthread_mutex_lock(&philo->table->write_mutex);
-	if (get_bool(&philo->philo_mutex, &philo->table->end_simulation))
+	if (get_bool(&philo->table->table_mutex, &philo->table->end_simulation))
 	{
 		pthread_mutex_unlock(&philo->table->write_mutex);
 		return ;

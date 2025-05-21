@@ -6,7 +6,7 @@
 /*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 17:59:35 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/04/18 05:47:03 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:32:07 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	*dinner(void *data)
 		eat(philo);
 		sleeping(philo);
 		thinking(philo);
-		if (get_bool(&philo->table->table_mutex, &philo->full))
+		if (get_bool(&philo->philo_mutex, &philo->full))
 			break ;
     usleep(1);
 	}
