@@ -29,7 +29,9 @@ void	clean(t_table **table)
 
 	i = -1;
 	while (++i < (*table)->philo_nbr)
+	{
 		pthread_mutex_destroy(&(*table)->forks[i].fork);
+	}
 	pthread_mutex_destroy(&(*table)->write_mutex);
 	pthread_mutex_destroy(&(*table)->table_mutex);
 	clean_philo(table);

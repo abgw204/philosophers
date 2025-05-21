@@ -38,7 +38,6 @@ static void	*dinner(void *data)
 		thinking(philo);
 		if (get_bool(&philo->philo_mutex, &philo->full))
 			break ;
-    usleep(1);
 	}
 	return (NULL);
 }
@@ -65,9 +64,8 @@ static void	simulation_start(t_table *table)
 	i = -1;
 	set_bool(&table->table_mutex, &table->all_threads_ready, true);
 	pthread_join(table->monitor_thread, NULL);
-	while (++i < table->philo_nbr && !simulation_finished(table))
+	while (++i < table->philo_nbr)
 		pthread_join(table->philos[i].thread_id, NULL);
-  monitor_function((void *)table);
 	set_bool(&table->table_mutex, &table->end_simulation, true);
 	clean(&table);
 }

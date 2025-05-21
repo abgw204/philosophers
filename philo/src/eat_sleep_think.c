@@ -17,14 +17,15 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->first_fork->fork);
 	if (get_bool(&philo->table->table_mutex, &philo->table->end_simulation))
 	{
-		pthread_mutex_unlock(&philo->table->write_mutex);
+		pthread_mutex_unlock(&philo->first_fork->fork);
 		return ;
 	}
 	write_status(TAKE_FIRST_FORK, philo);
 	pthread_mutex_lock(&philo->second_fork->fork);
 	if (get_bool(&philo->table->table_mutex, &philo->table->end_simulation))
 	{
-		pthread_mutex_unlock(&philo->table->write_mutex);
+		pthread_mutex_unlock(&philo->first_fork->fork);
+		pthread_mutex_unlock(&philo->second_fork->fork);
 		return ;
 	}
 	write_status(TAKE_SECOND_FORK, philo);
