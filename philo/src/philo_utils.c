@@ -6,7 +6,7 @@
 /*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:00:28 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/05/13 14:45:35 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/21 22:14:39 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ void	philo_dead(t_philo *philo)
 	elapsed = gettime() - philo->table->start_simulation;
 
 	set_bool(&philo->table->table_mutex, &philo->table->end_simulation, true);
+	pthread_mutex_lock(&philo->table->write_mutex);
 	printf("%-6lld %d ", elapsed, philo->id);
 	printf("is dead\n");
+	pthread_mutex_unlock(&philo->table->write_mutex);
 }

@@ -6,7 +6,7 @@
 /*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 17:59:51 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/05/21 19:35:14 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/21 22:08:40 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,5 @@ void	sleeping(t_philo *philo)
 void	thinking(t_philo *philo)
 {
 	write_status(THINKING, philo);
-	usleep(2);
+	usleep(20);
 }

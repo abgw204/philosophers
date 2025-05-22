@@ -6,7 +6,7 @@
 /*   By: gada-sil <gada-sil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 17:59:35 by gada-sil          #+#    #+#             */
-/*   Updated: 2025/05/21 19:32:07 by gada-sil         ###   ########.fr       */
+/*   Updated: 2025/05/21 22:14:10 by gada-sil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@ static void	lonely_simulation(t_table *table)
 
 	table->start_simulation = gettime();
 	elapsed = gettime() - table->start_simulation;
+	pthread_mutex_lock(&table->write_mutex);
 	printf("%-6ld 1 has taken a fork\n", elapsed);
 	isleep(table->time_to_die * 1e3);
 	printf("%-6ld 1 died", gettime() - table->start_simulation);
+	pthread_mutex_unlock(&table->write_mutex);
 }
 
 static void	*dinner(void *data)
