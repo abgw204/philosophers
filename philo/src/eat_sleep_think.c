@@ -49,4 +49,5 @@ void	sleeping(t_philo *philo)
 void	thinking(t_philo *philo)
 {
 	write_status(THINKING, philo);
+	usleep(2);
 }
