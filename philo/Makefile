@@ -23,13 +23,13 @@ LIB = philo.a
 NAME = philo
 
 .c.o:
-	@$(CC) $(FLAGS) -c $< -o $(<:.c=.o)
+	$(CC) $(FLAGS) -c $< -o $(<:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	ar -rc $(LIB) $(OBJS)
-	@$(CC) $(FLAGS) philo.c $(LIB) -o $(NAME)
+	$(CC) $(FLAGS) philo.c $(LIB) -o $(NAME)
 	@echo "\033[40;40m░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\033[0m"
 	@echo "\033[40;40m░░░░░░░▄▄▀▀▀▀▀▀▀▀▀▀▄▄█▄░░░░▄░░░░█░░░░░░░\033[0m"
 	@echo "\033[40;40m░░░░░░█▀░░░░░░░░░░░░░▀▀█▄░░░▀░░░░░░░░░▄░\033[0m"
