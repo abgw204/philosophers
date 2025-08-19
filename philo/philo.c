@@ -21,7 +21,7 @@ static void	lonely_simulation(t_table *table)
 	pthread_mutex_lock(&table->write_mutex);
 	printf("%-6ld 1 has taken a fork\n", elapsed);
 	isleep(table->time_to_die * 1e3);
-	printf("%-6ld 1 died", gettime() - table->start_simulation);
+	printf("%-6ld 1 died\n", gettime() - table->start_simulation);
 	pthread_mutex_unlock(&table->write_mutex);
 }
 
