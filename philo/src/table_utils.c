@@ -21,8 +21,8 @@ void	data_init(t_table *table)
 	table->all_threads_ready = false;
 	table->threads_running = 0;
 	pthread_mutex_init(&table->table_mutex, NULL);
-	table->philos = safe_malloc(table->philo_nbr * sizeof(t_philo));
-	table->forks = safe_malloc(table->philo_nbr * sizeof(t_fork));
+	table->philos = (t_philo *)safe_malloc(table->philo_nbr * sizeof(t_philo));
+	table->forks = (t_fork *)safe_malloc(table->philo_nbr * sizeof(t_fork));
 	pthread_mutex_init(&table->write_mutex, NULL);
 	while (++i < table->philo_nbr)
 	{

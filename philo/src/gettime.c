@@ -17,6 +17,6 @@ long	gettime(void)
 	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL))
-		simulation_error("Function gettimeofday failed");
+		simulation_error("Function gettimeofday failed\n");
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }

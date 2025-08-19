@@ -37,11 +37,11 @@ static int	atoi2(const char *str)
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
-			simulation_error("Invalid character!");
+			simulation_error("Invalid character!\n");
 		res = res * 10 + (*str++ - 48);
 	}
 	if ((res * sign) > 2147483647 || (res * sign) < 0)
-		simulation_error("Negative or greater than int max!");
+		simulation_error("Negative or greater than int max!\n");
 	return (res * sign);
 }
 

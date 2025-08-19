@@ -21,12 +21,12 @@ void	philo_init(t_table *table)
 	philo = table->philos;
 	while (++i < table->philo_nbr)
 	{
-		table->philos[i].id = i + 1;
-		table->philos[i].meals_counter = 0;
-		table->philos[i].full = false;
-		table->philos[i].table = table;
-		table->philos[i].last_meal_time = 0;
-		pthread_mutex_init(&table->philos[i].philo_mutex, NULL);
+		philo[i].id = i + 1;
+		philo[i].meals_counter = 0;
+		philo[i].full = false;
+		philo[i].table = table;
+		philo[i].last_meal_time = 0;
+		pthread_mutex_init(&philo[i].philo_mutex, NULL);
 		assign_forks(&philo[i], table->forks, i);
 	}
 }

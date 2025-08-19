@@ -24,7 +24,7 @@ void	*safe_malloc(size_t bytes)
 
 	ptr = malloc(bytes);
 	if (!ptr)
-		simulation_error("Malloc error!(something is very wrong)\n");
+		simulation_error("Malloc error! (something is very wrong)\n");
 	return (ptr);
 }
 
